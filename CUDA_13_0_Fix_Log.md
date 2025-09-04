@@ -132,8 +132,9 @@ CUDA 13.0中，以下cudaDeviceProp成员被移除：
 1. ✅ 修复 graph.inl:191 - 调整cudaGraphAddDependencies参数顺序
 2. ✅ 修复 compute_graph.inl:532 - 调整cudaGraphAddDependencies参数顺序  
 3. ✅ 修复 device_query.cu - 使用条件编译处理8个弃用成员
-4. ✅ 重新编译验证 - 编译成功
-5. ✅ 所有已知错误已修复
+4. ✅ 修复 device_scan.h:61 - 替换cub::Equality为cuda::std::equal_to
+5. ✅ 重新编译验证 - 编译成功
+6. ✅ 所有已知错误已修复
 
 ## 修复总结
 
@@ -162,6 +163,26 @@ CUDA 13.0中，以下cudaDeviceProp成员被移除：
 - ✅ **CUDA 13.0编译**: 成功
 - ✅ **所有已知错误**: 已修复
 - ✅ **向后兼容性**: 保持
+
+---
+
+### 错误 4: CUB API 兼容性问题
+
+#### 原始错误信息
+```
+C:\Work\Code\Sig\libuipc_13.0\external\muda\src\muda\cub\device\device_scan.h(61): error : namespace "cub" has no member "Equality"
+```
+
+#### 错误分析
+在CUDA 13.0中，CUB库的某些类型被重新组织。`cub::Equality` 需要被替换为 `cuda::std::equal_to`。
+
+#### 修复方案
+1. 在device_scan.h中将默认模板参数从 `cub::Equality` 改为 `cuda::std::equal_to`
+2. 保持向后兼容性
+
+#### 修复状态
+- [x] 已修复 - 替换默认模板参数为cuda::std::equal_to
+- [x] 已验证 - 编译通过
 
 ---
 

@@ -58,7 +58,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
             d_temp_storage, temp_storage_bytes, d_in, d_out, scan_op, num_items, _stream));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& ExclusiveSumByKey(KeysInputIteratorT    d_keys_in,
                                   ValuesInputIteratorT  d_values_in,
                                   ValuesOutputIteratorT d_values_out,
@@ -69,7 +69,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
             d_temp_storage, temp_storage_bytes, d_keys_in, d_values_in, d_values_out, num_items, equality_op, _stream));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename InitValueT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename InitValueT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& ExclusiveScanByKey(KeysInputIteratorT    d_keys_in,
                                    ValuesInputIteratorT  d_values_in,
                                    ValuesOutputIteratorT d_values_out,
@@ -91,7 +91,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
                                                                   false));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& InclusiveSumByKey(KeysInputIteratorT    d_keys_in,
                                   ValuesInputIteratorT  d_values_in,
                                   ValuesOutputIteratorT d_values_out,
@@ -102,7 +102,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
             d_temp_storage, temp_storage_bytes, d_keys_in, d_values_in, d_values_out, num_items, equality_op, _stream));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& InclusiveScanByKey(KeysInputIteratorT    d_keys_in,
                                    ValuesInputIteratorT  d_values_in,
                                    ValuesOutputIteratorT d_values_out,
@@ -173,7 +173,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
             d_temp_storage, temp_storage_bytes, d_in, d_out, scan_op, num_items, _stream));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& ExclusiveSumByKey(void*                 d_temp_storage,
                                   size_t&               temp_storage_bytes,
                                   KeysInputIteratorT    d_keys_in,
@@ -186,7 +186,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
             d_temp_storage, temp_storage_bytes, d_keys_in, d_values_in, d_values_out, num_items, equality_op, _stream));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename InitValueT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename InitValueT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& ExclusiveScanByKey(void*                 d_temp_storage,
                                    size_t&               temp_storage_bytes,
                                    KeysInputIteratorT    d_keys_in,
@@ -211,7 +211,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
                                                 false));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& InclusiveSumByKey(void*                 d_temp_storage,
                                   size_t&               temp_storage_bytes,
                                   KeysInputIteratorT    d_keys_in,
@@ -224,7 +224,7 @@ class DeviceScan : public CubWrapper<DeviceScan>
             d_temp_storage, temp_storage_bytes, d_keys_in, d_values_in, d_values_out, num_items, equality_op, _stream));
     }
 
-    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename EqualityOpT = cub::Equality>
+    template <typename KeysInputIteratorT, typename ValuesInputIteratorT, typename ValuesOutputIteratorT, typename ScanOpT, typename EqualityOpT = cuda::std::equal_to<typename std::iterator_traits<KeysInputIteratorT>::value_type>>
     DeviceScan& InclusiveScanByKey(void*                 d_temp_storage,
                                    size_t&               temp_storage_bytes,
                                    KeysInputIteratorT    d_keys_in,
