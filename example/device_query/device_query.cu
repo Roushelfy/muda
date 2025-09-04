@@ -34,8 +34,12 @@ void device_query()
     std::cout << "maxGridSize: (" << prop.maxGridSize[0] << ","
               << prop.maxGridSize[1] << "," << prop.maxGridSize[2]
               << ")  |>Maximum size of each dimension of a grid" << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "clockRate: " << prop.clockRate << "  |>"
               << "Clock frequency in kilohertz" << std::endl;
+#else
+    std::cout << "clockRate: [DEPRECATED in CUDA 13.0+]" << std::endl;
+#endif
     std::cout << "totalConstMem: " << prop.totalConstMem << "  |>"
               << "Constant memory available on device in bytes" << std::endl;
     std::cout << "major: " << prop.major << "  |>"
@@ -47,27 +51,43 @@ void device_query()
     std::cout << "texturePitchAlignment: " << prop.texturePitchAlignment << "  |>"
               << "Pitch alignment requirement for texture references bound to pitched memory"
               << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "deviceOverlap: " << prop.deviceOverlap << "  |>"
               << "Device can concurrently copy memory and execute a kernel. Deprecated. Use instead asyncEngineCount."
               << std::endl;
+#else
+    std::cout << "deviceOverlap: [REMOVED in CUDA 13.0+] Use asyncEngineCount instead" << std::endl;
+#endif
     std::cout << "multiProcessorCount: " << prop.multiProcessorCount << "  |>"
               << "Number of multiprocessors on device" << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "kernelExecTimeoutEnabled: " << prop.kernelExecTimeoutEnabled << "  |>"
               << "Specified whether there is a run time limit on kernels" << std::endl;
+#else
+    std::cout << "kernelExecTimeoutEnabled: [DEPRECATED in CUDA 13.0+]" << std::endl;
+#endif
     std::cout << "Integrated: " << prop.integrated << "  |>"
               << "Device is integrated as opposed to discrete" << std::endl;
     std::cout << "canMapHostMemory: " << prop.canMapHostMemory << "  |>"
               << "Device can map host memory with cudaHostAlloc/cudaHostGetDevicePointer"
               << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "computeMode: " << prop.computeMode << "  |>"
               << "Compute mode (See ::cudaComputeMode)" << std::endl;
+#else
+    std::cout << "computeMode: [DEPRECATED in CUDA 13.0+]" << std::endl;
+#endif
     std::cout << "maxTexture1D: " << prop.maxTexture1D << "  |>"
               << "Maximum 1D texture size" << std::endl;
     std::cout << "maxTexture1DMipmap: " << prop.maxTexture1DMipmap << "  |>"
               << "Maximum 1D mipmapped texture size" << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "maxTexture1DLinear: " << prop.maxTexture1DLinear << "  |>"
               << "Deprecated, do not use. Use cudaDeviceGetTexture1DLinearMaxWidth() or cuDeviceGetTexture1DLinearMaxWidth() instead."
               << std::endl;
+#else
+    std::cout << "maxTexture1DLinear: [REMOVED in CUDA 13.0+] Use cudaDeviceGetTexture1DLinearMaxWidth() instead" << std::endl;
+#endif
     std::cout << "maxTexture2D: (" << prop.maxTexture2D[0] << ","
               << prop.maxTexture2D[1] << ")  |>Maximum 2D texture dimensions"
               << std::endl;
@@ -137,8 +157,12 @@ void device_query()
               << "Number of asynchronous engines" << std::endl;
     std::cout << "unifiedAddressing: " << prop.unifiedAddressing << "  |>"
               << "Device shares a unified address space with the host" << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "memoryClockRate: " << prop.memoryClockRate << "  |>"
               << "Peak memory clock frequency in kilohertz" << std::endl;
+#else
+    std::cout << "memoryClockRate: [DEPRECATED in CUDA 13.0+]" << std::endl;
+#endif
     std::cout << "memoryBusWidth: " << prop.memoryBusWidth << "  |>"
               << "Global memory bus width in bits" << std::endl;
     std::cout << "l2CacheSize: " << prop.l2CacheSize << "  |>"
@@ -169,10 +193,14 @@ void device_query()
     std::cout << "hostNativeAtomicSupported: " << prop.hostNativeAtomicSupported << "  |>"
               << "Link between the device and the host supports native atomic operations"
               << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "singleToDoublePrecisionPerfRatio: " << prop.singleToDoublePrecisionPerfRatio
               << "  |>"
               << "Ratio of single precision performance (in floating-point operations per second) to double precision performance"
               << std::endl;
+#else
+    std::cout << "singleToDoublePrecisionPerfRatio: [DEPRECATED in CUDA 13.0+]" << std::endl;
+#endif
     std::cout << "pageableMemoryAccess: " << prop.pageableMemoryAccess << "  |>"
               << "Device supports coherently accessing pageable memory without calling cudaHostRegister on it"
               << std::endl;
@@ -188,10 +216,14 @@ void device_query()
     std::cout << "cooperativeLaunch: " << prop.cooperativeLaunch << "  |>"
               << "Device supports launching cooperative kernels via ::cudaLaunchCooperativeKernel"
               << std::endl;
+#if CUDA_VERSION < 13000
     std::cout << "cooperativeMultiDeviceLaunch: " << prop.cooperativeMultiDeviceLaunch
               << "  |>"
               << "Deprecated, cudaLaunchCooperativeKernelMultiDevice is deprecated."
               << std::endl;
+#else
+    std::cout << "cooperativeMultiDeviceLaunch: [REMOVED in CUDA 13.0+]" << std::endl;
+#endif
     std::cout << "sharedMemPerBlockOptin: " << prop.sharedMemPerBlockOptin << "  |>"
               << "Per device maximum shared memory per block usable by special opt in"
               << std::endl;

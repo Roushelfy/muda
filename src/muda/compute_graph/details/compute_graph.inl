@@ -530,7 +530,7 @@ MUDA_INLINE void ComputeGraph::cuda_graph_add_deps()
     };
 
     checkCudaErrors(cudaGraphAddDependencies(
-        m_graph.handle(), froms.data(), tos.data(), froms.size()));
+        m_graph.handle(), froms.data(), tos.data(), nullptr, froms.size()));
 }
 
 MUDA_INLINE void ComputeGraph::build_deps()
