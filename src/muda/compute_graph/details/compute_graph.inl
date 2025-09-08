@@ -529,8 +529,13 @@ MUDA_INLINE void ComputeGraph::cuda_graph_add_deps()
         tos.emplace_back(to->handle());
     };
 
+#if CUDA_VERSION >= 13000
     checkCudaErrors(cudaGraphAddDependencies(
         m_graph.handle(), froms.data(), tos.data(), nullptr, froms.size()));
+#else
+    checkCudaErrors(cudaGraphAddDependencies(
+        m_graph.handle(), froms.data(), tos.data(), froms.size()));
+#endif
 }
 
 MUDA_INLINE void ComputeGraph::build_deps()
