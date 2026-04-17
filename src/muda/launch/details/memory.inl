@@ -1,6 +1,9 @@
 #pragma once
 #include <muda/compute_graph/compute_graph.h>
 #include "memory.h"
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+#include <uipc/common/muda_memory_tracker.h>
+#endif
 namespace muda
 {
 template <typename T>
@@ -15,6 +18,9 @@ MUDA_HOST Memory& Memory::alloc_1d(T** ptr, size_t byte_size, bool async)
         checkCudaErrors(cudaMalloc(ptr, byte_size));
 #else
     checkCudaErrors(cudaMalloc(ptr, byte_size));
+#endif
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_alloc(byte_size);
 #endif
     return *this;
 }
@@ -34,6 +40,9 @@ MUDA_INLINE MUDA_HOST Memory& Memory::free(void* ptr, bool async)
         checkCudaErrors(cudaFree(ptr));
 #else
     checkCudaErrors(cudaFree(ptr));
+#endif
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_free();
 #endif
     return *this;
 }
@@ -55,6 +64,9 @@ MUDA_INLINE MUDA_HOST Memory& Memory::copy(void* dst, const void* src, size_t by
     {
         checkCudaErrors(cudaMemcpyAsync(dst, src, byte_size, kind, stream()));
     }
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_copy(byte_size);
+#endif
 
     return *this;
 }
@@ -99,6 +111,9 @@ MUDA_INLINE MUDA_HOST Memory& Memory::set(void* data, size_t byte_size, char byt
     {
         checkCudaErrors(cudaMemsetAsync(data, (int)byte, byte_size, stream()));
     }
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_set(byte_size);
+#endif
     return *this;
 }
 
@@ -108,6 +123,9 @@ MUDA_HOST Memory& Memory::alloc_2d(T** ptr, size_t* pitch, size_t width_bytes, s
     MUDA_ASSERT(ComputeGraphBuilder::is_direct_launching(),
                 "alloc must be called in direct launching mode");
     checkCudaErrors(cudaMallocPitch(ptr, pitch, width_bytes, height));
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_alloc(width_bytes * height);
+#endif
     return *this;
 }
 
@@ -149,6 +167,9 @@ MUDA_INLINE MUDA_HOST Memory& Memory::copy(void*          dst,
         checkCudaErrors(cudaMemcpy2DAsync(
             dst, dst_pitch, src, src_pitch, width_bytes, height, kind, stream()));
     }
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_copy(width_bytes * height);
+#endif
 
     return *this;
 }
@@ -212,6 +233,9 @@ MUDA_INLINE MUDA_HOST Memory& Memory::set(
         checkCudaErrors(
             cudaMemset2DAsync(data, pitch, (int)value, width_bytes, height, stream()));
     }
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_set(width_bytes * height);
+#endif
     return *this;
 }
 
@@ -223,6 +247,10 @@ MUDA_INLINE MUDA_HOST Memory& Memory::alloc_3d(cudaPitchedPtr*   pitched_ptr,
     MUDA_ASSERT(ComputeGraphBuilder::is_direct_launching(),
                 "alloc must be called in direct launching mode");
     checkCudaErrors(cudaMalloc3D(pitched_ptr, extent));
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_alloc(extent.width * extent.height
+                                                   * extent.depth);
+#endif
     return *this;
 }
 
@@ -250,6 +278,11 @@ MUDA_INLINE MUDA_HOST Memory& Memory::copy(const cudaMemcpy3DParms& parms)
     {
         checkCudaErrors(cudaMemcpy3DAsync(&parms, stream()));
     }
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_copy(parms.extent.width
+                                                  * parms.extent.height
+                                                  * parms.extent.depth);
+#endif
     return *this;
 }
 
@@ -294,6 +327,10 @@ MUDA_INLINE MUDA_HOST Memory& Memory::set(cudaPitchedPtr pitched_ptr, cudaExtent
     {
         checkCudaErrors(cudaMemset3DAsync(pitched_ptr, (int)value, extent, stream()));
     }
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    uipc::common::muda_memory_tracker_record_set(extent.width * extent.height
+                                                 * extent.depth);
+#endif
     return *this;
 }
 }  // namespace muda

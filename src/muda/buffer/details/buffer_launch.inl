@@ -10,6 +10,9 @@
 
 #include <muda/buffer/agent.h>
 #include <muda/buffer/reshape_nd/nd_reshaper.h>
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+#include <uipc/common/muda_memory_tracker.h>
+#endif
 
 namespace muda
 {
@@ -25,6 +28,10 @@ namespace muda
 template <typename T>
 MUDA_HOST BufferLaunch& BufferLaunch::resize(DeviceBuffer<T>& buffer, size_t new_size)
 {
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    if(new_size > buffer.capacity())
+        uipc::common::muda_memory_tracker_record_resize();
+#endif
     return resize(
         buffer,
         new_size,
@@ -47,6 +54,11 @@ MUDA_HOST BufferLaunch& BufferLaunch::resize(DeviceBuffer<T>& buffer, size_t new
 template <typename T>
 MUDA_HOST BufferLaunch& BufferLaunch::resize(DeviceBuffer2D<T>& buffer, Extent2D extent)
 {
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    if(extent.width() > buffer.capacity().width()
+       || extent.height() > buffer.capacity().height())
+        uipc::common::muda_memory_tracker_record_resize();
+#endif
     return resize(buffer,
                   extent,
                   [&](Buffer2DView<T> view)  // construct
@@ -76,6 +88,12 @@ MUDA_HOST BufferLaunch& BufferLaunch::resize(DeviceBuffer2D<T>& buffer, Extent2D
 template <typename T>
 MUDA_HOST BufferLaunch& BufferLaunch::resize(DeviceBuffer3D<T>& buffer, Extent3D extent)
 {
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    if(extent.width() > buffer.capacity().width()
+       || extent.height() > buffer.capacity().height()
+       || extent.depth() > buffer.capacity().depth())
+        uipc::common::muda_memory_tracker_record_resize();
+#endif
     return resize(buffer,
                   extent,
                   [&](Buffer3DView<T> view)  // construct
@@ -102,6 +120,10 @@ MUDA_HOST BufferLaunch& BufferLaunch::resize(DeviceBuffer3D<T>& buffer, Extent3D
 template <typename T>
 MUDA_HOST BufferLaunch& BufferLaunch::reserve(DeviceBuffer<T>& buffer, size_t capacity)
 {
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    if(capacity > buffer.capacity())
+        uipc::common::muda_memory_tracker_record_reserve();
+#endif
     NDReshaper::reserve(m_grid_dim, m_block_dim, m_stream, buffer, capacity);
     return *this;
 }
@@ -109,6 +131,11 @@ MUDA_HOST BufferLaunch& BufferLaunch::reserve(DeviceBuffer<T>& buffer, size_t ca
 template <typename T>
 MUDA_HOST BufferLaunch& BufferLaunch::reserve(DeviceBuffer2D<T>& buffer, Extent2D capacity)
 {
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    if(capacity.width() > buffer.capacity().width()
+       || capacity.height() > buffer.capacity().height())
+        uipc::common::muda_memory_tracker_record_reserve();
+#endif
     NDReshaper::reserve(m_grid_dim, m_block_dim, m_stream, buffer, capacity);
     return *this;
 }
@@ -116,6 +143,12 @@ MUDA_HOST BufferLaunch& BufferLaunch::reserve(DeviceBuffer2D<T>& buffer, Extent2
 template <typename T>
 MUDA_HOST BufferLaunch& BufferLaunch::reserve(DeviceBuffer3D<T>& buffer, Extent3D capacity)
 {
+#ifdef UIPC_ENABLE_MUDA_MEMORY_TRACKING
+    if(capacity.width() > buffer.capacity().width()
+       || capacity.height() > buffer.capacity().height()
+       || capacity.depth() > buffer.capacity().depth())
+        uipc::common::muda_memory_tracker_record_reserve();
+#endif
     NDReshaper::reserve(m_grid_dim, m_block_dim, m_stream, buffer, capacity);
     return *this;
 }
